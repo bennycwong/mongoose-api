@@ -1,0 +1,14 @@
+{
+    "name": "fitcause",
+    "description": "FitCause RESTful API",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "express": "3.x", 
+				"path": "0.4.x",
+				"mongoose": "3.8.x",
+				"mocha" : "1.17.x",
+				"expect.js" : "*",
+				"superagent" : "*"
+    }
+}

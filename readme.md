@@ -1,5 +1,5 @@
 Creating a valid user:
-curl -i -X POST -H "Content-Type: application/json" -d '	{"firstName": "Benny","lastName": "Wong",	"userName": "bwong337",	"email": "Benny@gofitcause.com",	"device": "ANDROID",	"location": "Americas/Los Angeles",	"userApp": "RUNKEEPER"}' http://localhost:4242/api/users
+curl -i -X POST -H "Content-Type: application/json" -d '	{"firstName": "Benny","lastName": "Wong",	"username": "bwong337",	"email": "Benny@gofitcause.com",	"device": "ANDROID",	"location": "Americas/Los Angeles",	"userApp": "RUNKEEPER"}' http://localhost:4242/api/users
 
 Create an invalid user:
 curl -i -X POST -H "Content-Type: application/json" -d '	{"firstName": "Benny","lastName": "Wong",	"device": "ANDROID",	"location": "Americas/Los Angeles",	"userApp": "RUNKEEPER"}' http://localhost:4242/api/users

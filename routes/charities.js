@@ -4,7 +4,7 @@ var Schema = mongoose.Schema; //Schema.ObjectId
 var Charity = new Schema({		
 		name: { type: String, required: false },
 		description: { type: String, required: false },
-		campaignId: [Campaigns],
+		campaignId: [{type: mongoose.Schema.Types.ObjectId, required: false}],
 		logos: [Logos],	
 });
 
@@ -15,12 +15,6 @@ var Logos = new Schema({
         required: true
     },
     url: { type: String, required: true }
-});
-
-var Campaigns = new Schema({
-		campaign_id:{
-			_id: {type: mongoose.Schema.Types.ObjectId, required: false}
-		}
 });
 
 var CharityModel = mongoose.model('Charity', Charity);

@@ -4,8 +4,9 @@ var Schema = mongoose.Schema; //Schema.ObjectId
 var Brand = new Schema({		
 		name: { type: String, required: false },
 		description: { type: String, required: false },
-		campaignId: [Campaigns],
+		campaignId: [{type: mongoose.Schema.Types.ObjectId, required: false}],
 		logos: [Logos],	
+		created_at : { type : Date, default: Date.now }
 });
 
 var Logos = new Schema({
@@ -15,12 +16,6 @@ var Logos = new Schema({
         required: true
     },
     url: { type: String, required: true }
-});
-
-var Campaigns = new Schema({
-		campaignId:{
-			_id: {type: mongoose.Schema.Types.ObjectId, required: false}
-		}
 });
 
 var BrandModel = mongoose.model('Brand', Brand);

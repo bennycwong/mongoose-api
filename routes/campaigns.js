@@ -1,22 +1,7 @@
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema; //Schema.ObjectId
-		
-var Campaign = new Schema({		
-		name: { type: String, required: false },
-		charityId: { type: mongoose.Schema.Types.ObjectId, required: false },
-		charityName: { type: String, required: true },
-		brandId: { type: mongoose.Schema.Types.ObjectId, required: true },
-		brandName: { type: String, required: false },
-		currentDollars:{ type: Number, required: false },
-		finalDollars: { type: Number, required: false },
-		startDateTime: { type: Date, required: true },
-		endDateTime:  { type: Date, required: true },
-		duration: { type: Number, required: false },
-		prorateRate: { type: Number, required: false },
-		impressionGoal: { type: Number, required: true}
-		
-});
-var CampaignModel = mongoose.model('Campaign', Campaign);
+var CampaignsSchema = require('../schema/campaignsSchema');
+
+var CampaignModel = mongoose.model('Campaign', CampaignsSchema.Campaign);
 
 
 // POST to CREATE
@@ -27,6 +12,7 @@ exports.addCampaign = function (req, res) {
   campaign = new CampaignModel({		
 		name: req.body.name,
 		charityId: req.body.charityId,
+		charityName: req.body.charityName,
 		brandId: req.body.brandId,
 		brandName: req.body.brandName,
 		currentDollars: req.body.currentDollars,
@@ -35,7 +21,8 @@ exports.addCampaign = function (req, res) {
 		endDateTime: req.body.endDateTime,
 		duration: req.body.duration,
 		prorateRate: req.body.prorateRate,
-		impressionGoal: req.body.impressionGoal																		
+		impressionGoal: req.body.impressionGoal,	
+		activityIds: req.body.activityIds													
   });
   campaign.save(function (err) {
     if (!err) {
@@ -76,22 +63,11 @@ exports.updateCampaigns = function (req, res) {
         });
     }
 };
-
-// Single update
-exports.updateCampaign = function (req, res) {
+// Update activityId
+exports.updateActivityId = function (req, res) {
   return CampaignModel.findById(req.params.id, function (err, campaign) {
-				
-		campaign.name = req.body.name;
-		campaign.charityId = req.body.charityId;
-		campaign.brandId = req.body.brandId;
-		campaign.brandName = req.body.brandName;
-		campaign.currentDollars = req.body.currentDollars;
-		campaign.finalDollars = req.body.finalDollars;
-		campaign.startDateTime = req.body.startDateTime;
-		campaign.endDateTime = req.body.endDateTime;
-		campaign.duration = req.body.duration;
-		campaign.prorateRate = req.body.prorateRate;
-		campaign.impressionGoal = req.body.impressionGoal;	
+
+		campaign.activityIds = req.body.activityIds;	
 		
     return campaign.save(function (err) {
       if (!err) {
@@ -99,6 +75,84 @@ exports.updateCampaign = function (req, res) {
 					return res.send(500, {"message":"_id not found", "name":"nullPointerException","errors":"Cannot find campaign with _id: " + req.params.id});
 				} else{
         	console.log("updated");
+					//TO-DO:
+					//Update Charity and Brand Models that's associated with this campaign to add this campaign ID to that model
+					
+				  return res.send(200);
+						}
+      } else {
+        console.log(err);
+				return res.send(500, err);
+      }
+
+    });
+  });
+};
+
+// Single update
+exports.updateCampaign = function (req, res) {
+  return CampaignModel.findById(req.params.id, function (err, campaign) {
+
+		if(req.body.name){
+			campaign.name = req.body.name;
+		}
+		
+		if(req.body.charityId){
+			campaign.charityId = req.body.charityId;
+		}
+		
+		if(req.body.chartiyName){
+			campaign.chartiyName = req.body.chartiyName;
+		}
+		
+		if(req.body.brandId){
+			campaign.brandId = req.body.brandId;
+		}
+		
+		if(req.body.brandName){
+			campaign.brandName = req.body.brandName;
+		}
+		
+		if(req.body.currentDollars){
+			campaign.currentDollars = req.body.currentDollars;
+		}
+		
+		if(req.body.finalDollars){
+			campaign.finalDollars = req.body.finalDollars;
+		}
+		
+		if(req.body.startDateTime){
+			campaign.startDateTime = req.body.startDateTime;
+		}
+		
+		if(req.body.endDateTime){
+			campaign.endDateTime = req.body.endDateTime;
+		}
+		
+		if(req.body.duration){
+		campaign.duration = req.body.duration;
+		}
+		if(req.body.prorateRate){
+			campaign.prorateRate = req.body.prorateRate;
+		}
+		
+		if(req.body.impressionGoal){
+			campaign.impressionGoal = req.body.impressionGoal;	
+		}
+		
+		if(req.body.activityIds){
+			campaign.activityIds = req.body.activityIds;	
+		}
+		
+    return campaign.save(function (err) {
+      if (!err) {
+				if(campaign == null){
+					return res.send(500, {"message":"_id not found", "name":"nullPointerException","errors":"Cannot find campaign with _id: " + req.params.id});
+				} else{
+        	console.log("updated");
+					//TO-DO:
+					//Update Charity and Brand Models that's associated with this campaign to add this campaign ID to that model
+					
 				  return res.send(200);
 						}
       } else {
@@ -172,3 +226,35 @@ exports.deleteCampaign = function (req, res) {
 		}
   });
 };
+
+
+/*
+// Non API methods
+//TO-DO update campaign with new activity
+
+//Calculate current dollars by multiplying by a prorate based on duration.
+
+
+// Single campaign
+exports.updateCampaignActivityId = function (req, res) {
+  return CampaignModel.findById(req.params.id, function (err, campaign) {
+		//add to the list of activities.
+		campaign.activityIds += req.body.activityIds;	
+		
+    return campaign.save(function (err) {
+      if (!err) {
+				if(campaign == null){
+					return res.send(500, {"message":"_id not found", "name":"nullPointerException","errors":"Cannot find campaign with _id: " + req.params.id});
+				} else{
+        	console.log("updated");
+				  return res.send(200);
+						}
+      } else {
+        console.log(err);
+				return res.send(500, err);
+      }
+
+    });
+  });
+};
+*/

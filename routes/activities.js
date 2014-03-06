@@ -9,8 +9,8 @@ var Activity = new Schema({
 		activityMetric: { type: String, required: true },
 		activityCount: { type: Number, required: true },
 		activityStartTime: { type: Date, required: true },
-		activityEndTime: { type: Date, required: true }
-		
+		activityEndTime: { type: Date, required: true },
+		created_at : { type : Date, default: Date.now }
 });
 
 var ActivityModel = mongoose.model('Activity', Activity);
@@ -20,9 +20,32 @@ exports.addActivity = function (req, res) {
   var activity;
   console.log("POST: ");
   console.log(req.body);
-  activity = new ActivityModel({		
+  /* TO-DO:
+	Find userID from....
+	req.body.username 
+	req.body.user
+	
+	If user does not exist, then create a user model record
+	(use the API post method?)
+		User {
+			firstName: { type: String, required: false },
+			lastName: { type: String, required: false },
+			username: { type: String, required: true },
+			email: { type: String, required: true },
+			device: { type: String, required: false },
+			location: { type: String, required: false },
+			userApp: { type: String, required: true }
+		}
+		
+	var myUserId = response from looking into mongo
+	
+	*/
+	activity = new ActivityModel({	
+		
+		
+			
 		campaignId: req.body.campaignId,
-		userId: req.body.userId,
+		userId: req.body.userId, //TO-DO: Should upgrade to myUserId
 		activityType: req.body.activityType,
 		activityMetric: req.body.activityMetric,
 		activityCount: req.body.activityCount,
@@ -34,6 +57,10 @@ exports.addActivity = function (req, res) {
     if (!err) {
       console.log("created");
 			return res.send(200, activity);
+			/* TO-DO: Add activityID to associated Campaign
+			
+			
+			*/
     } else {
       console.log(err);
 			return res.send(500, err)

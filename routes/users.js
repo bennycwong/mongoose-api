@@ -1,19 +1,7 @@
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema; //Schema.ObjectId
-		
-var User = new Schema({		
-		firstName: { type: String, required: false },
-		lastName: { type: String, required: false },
-		userName: { type: String, required: true },
-		email: { type: String, required: true },
-		device: { type: String, required: false },
-		location: { type: String, required: false },
-		userApp: { type: String, required: true }
-		
-});
-var UserModel = mongoose.model('User', User);
+var UsersSchema = require('../schema/usersSchema');
 
-
+var UserModel = mongoose.model('User', UsersSchema.User);
 // POST to CREATE
 exports.addUser = function (req, res) {
   var user;
@@ -22,7 +10,7 @@ exports.addUser = function (req, res) {
   user = new UserModel({		
 		firstName: req.body.firstName,
 		lastName: req.body.lastName,
-		userName: req.body.userName,
+		username: req.body.username,
 		email: req.body.email,
 		device: req.body.device,
 		location: req.body.location,
@@ -74,7 +62,7 @@ exports.updateUser = function (req, res) {
 				
 		user.firstName = req.body.firstName;
 		user.lastName = req.body.lastName;
-		user.userName = req.body.userName;
+		user.username = req.body.username;
 		user.email = req.body.email;
 		user.device = req.body.device;
 		user.location = req.body.location;
