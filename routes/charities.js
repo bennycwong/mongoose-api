@@ -1,23 +1,8 @@
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema; //Schema.ObjectId
-		
-var Charity = new Schema({		
-		name: { type: String, required: false },
-		description: { type: String, required: false },
-		campaignId: [{type: mongoose.Schema.Types.ObjectId, required: false}],
-		logos: [Logos],	
-});
+var CharitiesSchema = require('../schema/charitiesSchema');
+require('../lib/arrayHelper');
 
-var Logos = new Schema({
-    kind: { 
-        type: String, 
-        enum: ['sm', 'lg', 'sm_blk', 'lg_blk'],
-        required: true
-    },
-    url: { type: String, required: true }
-});
-
-var CharityModel = mongoose.model('Charity', Charity);
+var CharityModel = mongoose.model('Charity', CharitiesSchema.Charity);
 
 // POST to CREATE
 exports.addCharity = function (req, res) {
@@ -31,6 +16,9 @@ exports.addCharity = function (req, res) {
 		logos: req.body.logos,
 		
   });
+	if(charity.camapginId){
+		charity.camapginId = charity.camapginId.unique();
+	}
   charity.save(function (err) {
     if (!err) {
       console.log("created");
@@ -74,11 +62,21 @@ exports.updateCharities = function (req, res) {
 // Single update
 exports.updateCharity = function (req, res) {
   return CharityModel.findById(req.params.id, function (err, charity) {
-				
-		charity.name = req.body.name,
-		charity.description = req.body.description,
-		charity.campaignId = req.body.campaignId,
-		charity.logos = req.body.logos
+		if(req.body.name){
+			charity.name = req.body.name
+		}
+		
+		if(req.body.description){
+			charity.description = req.body.description
+		}
+		
+		if(req.body.campaignId){
+			
+			charity.campaignId = charity.campaignId.concat(req.body.campaignId).unique()
+		}
+		if(req.body.logos){
+				charity.logos = req.body.logos
+		}
 		
     return charity.save(function (err) {
       if (!err) {

@@ -17,6 +17,7 @@ describe('/api/campaigns TEST: ', function(){
 				duration: 15,
 				prorateRate: 1,
 				impressionGoal: 15000000,
+				activityIds: ["53165b14e1f622a012df0cac","53165b14e1f622a012df0cac"]	
       })
       .end(function(e,res){
         expect(e).to.eql(null)
@@ -31,7 +32,7 @@ describe('/api/campaigns TEST: ', function(){
 	it('PUT Request: Valid ActivityId', function(done){
 		superagent.put('http://localhost:4242/api/campaigns/'+id)
 		.send({ 
-			activityIds:["53165b14e1f622a012df0cad","53165b14e1f622a012df0cae","53165b14e1f622a012df0caf"]	
+			activityIds:["53165b14e1f622a012df0cad","53165b14e1f622a012df0cad","53165b14e1f622a012df0cae","53165b14e1f622a012df0caf"]	
 		})
 		.end(function(e,res){
 			expect(e).to.eql(null)

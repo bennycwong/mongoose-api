@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var CampaignsSchema = require('../schema/campaignsSchema');
+require('../lib/arrayHelper');
 
 var CampaignModel = mongoose.model('Campaign', CampaignsSchema.Campaign);
 
@@ -22,8 +23,11 @@ exports.addCampaign = function (req, res) {
 		duration: req.body.duration,
 		prorateRate: req.body.prorateRate,
 		impressionGoal: req.body.impressionGoal,	
-		activityIds: req.body.activityIds													
+		activityIds: req.body.activityIds												
   });
+	if(campaign.activityIds){
+		campaign.activityIds = campaign.activityIds.unqique()
+	}
   campaign.save(function (err) {
     if (!err) {
       console.log("created");
@@ -141,7 +145,7 @@ exports.updateCampaign = function (req, res) {
 		}
 		
 		if(req.body.activityIds){
-			campaign.activityIds = req.body.activityIds;	
+			campaign.activityIds = campaign.activityIds.concat(req.body.activityIds).unique();	
 		}
 		
     return campaign.save(function (err) {

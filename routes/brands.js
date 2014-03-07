@@ -1,24 +1,8 @@
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema; //Schema.ObjectId
-		
-var Brand = new Schema({		
-		name: { type: String, required: false },
-		description: { type: String, required: false },
-		campaignId: [{type: mongoose.Schema.Types.ObjectId, required: false}],
-		logos: [Logos],	
-		created_at : { type : Date, default: Date.now }
-});
+var BrandsSchema = require('../schema/brandsSchema');
+require('../lib/arrayHelper');
 
-var Logos = new Schema({
-    kind: { 
-        type: String, 
-        enum: ['sm', 'lg', 'sm_blk', 'lg_blk'],
-        required: true
-    },
-    url: { type: String, required: true }
-});
-
-var BrandModel = mongoose.model('Brand', Brand);
+var BrandModel = mongoose.model('Brand', BrandsSchema.Brand);
 
 // POST to CREATE
 exports.addBrand = function (req, res) {
@@ -32,6 +16,9 @@ exports.addBrand = function (req, res) {
 		logos: req.body.logos,
 		
   });
+	if(brand.camapginId){
+		brand.camapginId = brand.camapginId.unique();
+	}
   brand.save(function (err) {
     if (!err) {
       console.log("created");
@@ -75,11 +62,21 @@ exports.updateBrands = function (req, res) {
 // Single update
 exports.updateBrand = function (req, res) {
   return BrandModel.findById(req.params.id, function (err, brand) {
-				
-		brand.name = req.body.name,
-		brand.description = req.body.description,
-		brand.campaignId = req.body.campaignId,
-		brand.logo = req.body.logos
+		if(req.body.name){
+			brand.name = req.body.name
+		}
+		
+		if(req.body.description){
+			brand.description = req.body.description
+		}
+		
+		if(req.body.campaignId){
+			
+			brand.campaignId = brand.campaignId.concat(req.body.campaignId).unique()
+		}
+		if(req.body.logos){
+				brand.logos = req.body.logos
+		}
 	
     return brand.save(function (err) {
       if (!err) {
