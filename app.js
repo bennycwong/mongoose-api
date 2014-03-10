@@ -12,7 +12,10 @@ var app = express.createServer();
 
 // database
 //impliment error handling for not being able to connect to mongo
-mongoose.connect('mongodb://localhost/fitcause_api_development');
+// mongoose.connect('mongodb://localhost/fitcause_api_development');
+mongoose.connect('mongodb://fitcause:fitcause@ds033669.mongolab.com:33669/fitcause_api');
+
+
 
 // config
 
