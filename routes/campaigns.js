@@ -26,7 +26,7 @@ exports.addCampaign = function (req, res) {
 		activityIds: req.body.activityIds												
   });
 	if(campaign.activityIds){
-		campaign.activityIds = campaign.activityIds.unqique()
+		campaign.activityIds = campaign.activityIds.unique()
 	}
   campaign.save(function (err) {
     if (!err) {
